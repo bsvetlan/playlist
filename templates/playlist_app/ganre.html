@@ -1,0 +1,42 @@
+{% extends 'playlist_app/base.html' %}
+{% load static %}
+
+
+{% block title %}Список жанров{% endblock title %}
+
+
+{% block main %}
+    <h1><b>Количество песен по каждому жанру, которые были выпущены в году, заданном пользователем</b></h1>
+    <br>
+    <form name="form" enctype="multipart/form-data" action="{% url "ganre" %}" method="post">
+        {% csrf_token %}
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="categorySelect">Выберите Год</label>
+                <input type="number" class="form-control" id="date" name="date" placeholder="Дата" required>
+            </div>
+        </div>
+        <div class="col-md-2 col-md-offset-10">
+            <button type="submit" href="" class="btn btn-primary labelText">
+                Найти
+            </button>
+        </div>
+    </form>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Исполнитель</th>
+            <th>Количество наград</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in result %}
+            <tr>
+                {% for key, value in item.items %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock main %}

@@ -1,0 +1,47 @@
+{% extends 'playlist_app/base.html' %}
+{% load static %}
+
+
+{% block title %}Список жанров{% endblock title %}
+
+
+{% block main %}
+    <h1><b>Вывести в алфавитном порядке исполнителей, которые выпустили хотя бы один альбом за период, заданный пользователем</b></h1>
+    <br>
+    <form name="form" enctype="multipart/form-data" action="{% url "execute" %}" method="post">
+        {% csrf_token %}
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="categorySelect">Выберите Год Начала периода</label>
+                <input type="number" class="form-control" id="dateStart" name="dateStart" placeholder="Дата" required>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="categorySelect">Выберите Год Окончания периода</label>
+                <input type="number" class="form-control" id="dateEnd" name="dateEnd" placeholder="Дата" required>
+            </div>
+        </div>
+        <div class="col-md-2 col-md-offset-10">
+            <button type="submit" href="" class="btn btn-primary labelText">
+                Найти
+            </button>
+        </div>
+    </form>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Исполнитель</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in result %}
+            <tr>
+                {% for key, value in item.items %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock main %}

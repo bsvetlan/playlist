@@ -1,0 +1,28 @@
+{% extends 'playlist_app/base.html' %}
+{% load static %}
+
+
+{% block title %}Топ пользователей{% endblock title %}
+
+
+{% block main %}
+    <h1><b>Топ 10 исполнителей, которые заработали больше всего наград</b></h1>
+    <br>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Исполнитель</th>
+            <th>Количество наград</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in result %}
+            <tr>
+                {% for key, value in item.items %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock main %}

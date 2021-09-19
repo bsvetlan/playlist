@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>dd4e7123-ac09-436b-98f9-9231632f3390.SCHEMA:playlist_db.public</OriginalElement>
+  <nodes>
+    <node x="12.0" y="200.0">dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.Playlist</node>
+    <node x="373.0" y="189.0">dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.Executor</node>
+    <node x="0.0" y="0.0">dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.User</node>
+    <node x="190.5" y="167.0">dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.Song</node>
+    <node x="48.5" y="432.0">dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.SongPlaylist</node>
+    <node x="190.5" y="400.0">dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.Reward</node>
+    <node x="344.5" y="432.0">dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.SongExecutor</node>
+    <node x="190.5" y="0.0">dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.Album</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.Reward" target="dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.Song">
+      <point x="0.0" y="-69.5" />
+      <point x="0.0" y="91.5" />
+    </edge>
+    <edge source="dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.SongPlaylist" target="dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.Playlist">
+      <point x="-30.5" y="-37.5" />
+      <point x="0.0" y="58.5" />
+    </edge>
+    <edge source="dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.SongExecutor" target="dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.Executor">
+      <point x="33.5" y="-37.5" />
+      <point x="0.0" y="69.5" />
+    </edge>
+    <edge source="dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.SongPlaylist" target="dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.Song">
+      <point x="30.5" y="-37.5" />
+      <point x="140.0" y="375.0" />
+      <point x="212.83333333333334" y="375.0" />
+      <point x="-44.66666666666666" y="91.5" />
+    </edge>
+    <edge source="dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.SongExecutor" target="dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.Song">
+      <point x="-33.5" y="-37.5" />
+      <point x="378.0" y="375.0" />
+      <point x="302.16666666666663" y="375.0" />
+      <point x="44.66666666666663" y="91.5" />
+    </edge>
+    <edge source="dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.Playlist" target="dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.User">
+      <point x="0.0" y="-58.5" />
+      <point x="0.0" y="58.5" />
+    </edge>
+    <edge source="dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.Song" target="dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.Album">
+      <point x="0.0" y="-91.5" />
+      <point x="0.0" y="58.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.4307262569832403" x="1073.4210526315787" y="276.4148815618814" />
+  <SelectedNodes>
+    <node>dd4e7123-ac09-436b-98f9-9231632f3390.TABLE:playlist_db.public.User</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Key columns</Category>
+    <Category>Columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+

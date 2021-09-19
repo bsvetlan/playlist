@@ -1,0 +1,42 @@
+{% extends 'playlist_app/base.html' %}
+{% load static %}
+
+
+{% block title %}Список жанров{% endblock title %}
+
+
+{% block main %}
+    <h1><b>Альбом с самыми популярными песнями (наивысший средний балл) в указанном пользовательском жанре</b></h1>
+    <br>
+    <form name="form" enctype="multipart/form-data" action="{% url "album" %}" method="post">
+        {% csrf_token %}
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="categorySelect">Введите названия жанров через запятую</label>
+                <input type="text" class="form-control" id="ganre" name="ganre" placeholder="Жанры" required>
+            </div>
+        </div>
+        <div class="col-md-2 col-md-offset-10">
+            <button type="submit" href="" class="btn btn-primary labelText">
+                Найти
+            </button>
+        </div>
+    </form>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Название альбома</th>
+            <th>Средний рейтинг</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in result %}
+            <tr>
+                {% for key, value in item.items %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock main %}

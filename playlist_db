@@ -1,0 +1,1618 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 10.3
+-- Dumped by pg_dump version 10.3
+
+-- Started on 2021-09-19 13:37:14
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 1 (class 3079 OID 12973)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 3070 (class 0 OID 0)
+-- Dependencies: 1
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 197 (class 1259 OID 41434)
+-- Name: Album; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Album" (
+    "AlbumId" integer NOT NULL,
+    "Name" character varying(255) NOT NULL,
+    "CreationDate" date
+);
+
+
+ALTER TABLE public."Album" OWNER TO postgres;
+
+--
+-- TOC entry 196 (class 1259 OID 41432)
+-- Name: Album_AlbumId_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public."Album" ALTER COLUMN "AlbumId" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."Album_AlbumId_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 203 (class 1259 OID 41466)
+-- Name: Executor; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Executor" (
+    "ExecutorId" integer NOT NULL,
+    "Name" character varying(255) NOT NULL,
+    "Participants" text,
+    "ApperanceYear" date
+);
+
+
+ALTER TABLE public."Executor" OWNER TO postgres;
+
+--
+-- TOC entry 202 (class 1259 OID 41464)
+-- Name: Executor_ExecutorId_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public."Executor" ALTER COLUMN "ExecutorId" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."Executor_ExecutorId_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 207 (class 1259 OID 41483)
+-- Name: Playlist; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Playlist" (
+    "PlaylistId" integer NOT NULL,
+    "Name" character varying(150),
+    "UserId" integer NOT NULL
+);
+
+
+ALTER TABLE public."Playlist" OWNER TO postgres;
+
+--
+-- TOC entry 206 (class 1259 OID 41481)
+-- Name: Playlist_PlaylistId_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public."Playlist" ALTER COLUMN "PlaylistId" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."Playlist_PlaylistId_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 201 (class 1259 OID 41454)
+-- Name: Reward; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Reward" (
+    "RewardId" integer NOT NULL,
+    "Name" character varying(255) NOT NULL,
+    "IssueYear" date,
+    "SongId" integer
+);
+
+
+ALTER TABLE public."Reward" OWNER TO postgres;
+
+--
+-- TOC entry 200 (class 1259 OID 41452)
+-- Name: Reward_RewardId_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public."Reward" ALTER COLUMN "RewardId" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."Reward_RewardId_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 199 (class 1259 OID 41441)
+-- Name: Song; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Song" (
+    "SongId" integer NOT NULL,
+    "Name" character varying(255) NOT NULL,
+    "AlbumId" integer,
+    "Genre" character varying(50),
+    "ReleaseYear" date,
+    "Rating" integer,
+    CONSTRAINT "Song_Rating_check" CHECK ((("Rating" >= 1) AND ("Rating" <= 10)))
+);
+
+
+ALTER TABLE public."Song" OWNER TO postgres;
+
+--
+-- TOC entry 208 (class 1259 OID 41493)
+-- Name: SongExecutor; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."SongExecutor" (
+    "SongId" integer NOT NULL,
+    "ExecutorId" integer NOT NULL
+);
+
+
+ALTER TABLE public."SongExecutor" OWNER TO postgres;
+
+--
+-- TOC entry 209 (class 1259 OID 41511)
+-- Name: SongPlaylist; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."SongPlaylist" (
+    "PlaylistId" integer NOT NULL,
+    "SongId" integer NOT NULL
+);
+
+
+ALTER TABLE public."SongPlaylist" OWNER TO postgres;
+
+--
+-- TOC entry 198 (class 1259 OID 41439)
+-- Name: Song_SongId_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public."Song" ALTER COLUMN "SongId" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."Song_SongId_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 205 (class 1259 OID 41476)
+-- Name: User; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."User" (
+    "UserId" integer NOT NULL,
+    "Login" character varying(50) NOT NULL,
+    "Username" character varying(255)
+);
+
+
+ALTER TABLE public."User" OWNER TO postgres;
+
+--
+-- TOC entry 204 (class 1259 OID 41474)
+-- Name: User_UserId_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public."User" ALTER COLUMN "UserId" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."User_UserId_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 217 (class 1259 OID 41557)
+-- Name: auth_group; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_group (
+    id integer NOT NULL,
+    name character varying(150) NOT NULL
+);
+
+
+ALTER TABLE public.auth_group OWNER TO postgres;
+
+--
+-- TOC entry 216 (class 1259 OID 41555)
+-- Name: auth_group_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_group_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_group_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3071 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: auth_group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_group_id_seq OWNED BY public.auth_group.id;
+
+
+--
+-- TOC entry 219 (class 1259 OID 41567)
+-- Name: auth_group_permissions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_group_permissions (
+    id bigint NOT NULL,
+    group_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_group_permissions OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 41565)
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_group_permissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_group_permissions_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3072 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_group_permissions_id_seq OWNED BY public.auth_group_permissions.id;
+
+
+--
+-- TOC entry 215 (class 1259 OID 41549)
+-- Name: auth_permission; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_permission (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    content_type_id integer NOT NULL,
+    codename character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.auth_permission OWNER TO postgres;
+
+--
+-- TOC entry 214 (class 1259 OID 41547)
+-- Name: auth_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_permission_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_permission_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3073 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: auth_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_permission_id_seq OWNED BY public.auth_permission.id;
+
+
+--
+-- TOC entry 221 (class 1259 OID 41575)
+-- Name: auth_user; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_user (
+    id integer NOT NULL,
+    password character varying(128) NOT NULL,
+    last_login timestamp with time zone,
+    is_superuser boolean NOT NULL,
+    username character varying(150) NOT NULL,
+    first_name character varying(150) NOT NULL,
+    last_name character varying(150) NOT NULL,
+    email character varying(254) NOT NULL,
+    is_staff boolean NOT NULL,
+    is_active boolean NOT NULL,
+    date_joined timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.auth_user OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 41585)
+-- Name: auth_user_groups; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_user_groups (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    group_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_user_groups OWNER TO postgres;
+
+--
+-- TOC entry 222 (class 1259 OID 41583)
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_user_groups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_user_groups_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3074 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_user_groups_id_seq OWNED BY public.auth_user_groups.id;
+
+
+--
+-- TOC entry 220 (class 1259 OID 41573)
+-- Name: auth_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_user_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3075 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: auth_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_user_id_seq OWNED BY public.auth_user.id;
+
+
+--
+-- TOC entry 225 (class 1259 OID 41593)
+-- Name: auth_user_user_permissions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_user_user_permissions (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_user_user_permissions OWNER TO postgres;
+
+--
+-- TOC entry 224 (class 1259 OID 41591)
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_user_user_permissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_user_user_permissions_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3076 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_user_user_permissions_id_seq OWNED BY public.auth_user_user_permissions.id;
+
+
+--
+-- TOC entry 227 (class 1259 OID 41653)
+-- Name: django_admin_log; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_admin_log (
+    id integer NOT NULL,
+    action_time timestamp with time zone NOT NULL,
+    object_id text,
+    object_repr character varying(200) NOT NULL,
+    action_flag smallint NOT NULL,
+    change_message text NOT NULL,
+    content_type_id integer,
+    user_id integer NOT NULL,
+    CONSTRAINT django_admin_log_action_flag_check CHECK ((action_flag >= 0))
+);
+
+
+ALTER TABLE public.django_admin_log OWNER TO postgres;
+
+--
+-- TOC entry 226 (class 1259 OID 41651)
+-- Name: django_admin_log_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.django_admin_log_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_admin_log_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3077 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: django_admin_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.django_admin_log_id_seq OWNED BY public.django_admin_log.id;
+
+
+--
+-- TOC entry 213 (class 1259 OID 41539)
+-- Name: django_content_type; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_content_type (
+    id integer NOT NULL,
+    app_label character varying(100) NOT NULL,
+    model character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.django_content_type OWNER TO postgres;
+
+--
+-- TOC entry 212 (class 1259 OID 41537)
+-- Name: django_content_type_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.django_content_type_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_content_type_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3078 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: django_content_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.django_content_type_id_seq OWNED BY public.django_content_type.id;
+
+
+--
+-- TOC entry 211 (class 1259 OID 41528)
+-- Name: django_migrations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_migrations (
+    id bigint NOT NULL,
+    app character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    applied timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_migrations OWNER TO postgres;
+
+--
+-- TOC entry 210 (class 1259 OID 41526)
+-- Name: django_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.django_migrations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_migrations_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3079 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: django_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.django_migrations_id_seq OWNED BY public.django_migrations.id;
+
+
+--
+-- TOC entry 228 (class 1259 OID 41684)
+-- Name: django_session; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_session (
+    session_key character varying(40) NOT NULL,
+    session_data text NOT NULL,
+    expire_date timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_session OWNER TO postgres;
+
+--
+-- TOC entry 2823 (class 2604 OID 41560)
+-- Name: auth_group id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group ALTER COLUMN id SET DEFAULT nextval('public.auth_group_id_seq'::regclass);
+
+
+--
+-- TOC entry 2824 (class 2604 OID 41570)
+-- Name: auth_group_permissions id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions ALTER COLUMN id SET DEFAULT nextval('public.auth_group_permissions_id_seq'::regclass);
+
+
+--
+-- TOC entry 2822 (class 2604 OID 41552)
+-- Name: auth_permission id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_permission ALTER COLUMN id SET DEFAULT nextval('public.auth_permission_id_seq'::regclass);
+
+
+--
+-- TOC entry 2825 (class 2604 OID 41578)
+-- Name: auth_user id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user ALTER COLUMN id SET DEFAULT nextval('public.auth_user_id_seq'::regclass);
+
+
+--
+-- TOC entry 2826 (class 2604 OID 41588)
+-- Name: auth_user_groups id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_groups ALTER COLUMN id SET DEFAULT nextval('public.auth_user_groups_id_seq'::regclass);
+
+
+--
+-- TOC entry 2827 (class 2604 OID 41596)
+-- Name: auth_user_user_permissions id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions ALTER COLUMN id SET DEFAULT nextval('public.auth_user_user_permissions_id_seq'::regclass);
+
+
+--
+-- TOC entry 2828 (class 2604 OID 41656)
+-- Name: django_admin_log id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_admin_log ALTER COLUMN id SET DEFAULT nextval('public.django_admin_log_id_seq'::regclass);
+
+
+--
+-- TOC entry 2821 (class 2604 OID 41542)
+-- Name: django_content_type id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_content_type ALTER COLUMN id SET DEFAULT nextval('public.django_content_type_id_seq'::regclass);
+
+
+--
+-- TOC entry 2820 (class 2604 OID 41531)
+-- Name: django_migrations id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_migrations ALTER COLUMN id SET DEFAULT nextval('public.django_migrations_id_seq'::regclass);
+
+
+--
+-- TOC entry 3031 (class 0 OID 41434)
+-- Dependencies: 197
+-- Data for Name: Album; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Album" ("AlbumId", "Name", "CreationDate") FROM stdin;
+1	Альбом 1	2005-12-11
+2	Альбом 2	2006-12-11
+\.
+
+
+--
+-- TOC entry 3037 (class 0 OID 41466)
+-- Dependencies: 203
+-- Data for Name: Executor; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Executor" ("ExecutorId", "Name", "Participants", "ApperanceYear") FROM stdin;
+1	Исполнитель 1	исп	1960-01-01
+2	Исполнитель 2	исп	1970-01-01
+3	Исполнитель 3	сп	1980-01-01
+4	Bполнитель 4	п	1990-01-01
+5	Исполнитель 5	исп	1960-01-01
+\.
+
+
+--
+-- TOC entry 3041 (class 0 OID 41483)
+-- Dependencies: 207
+-- Data for Name: Playlist; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Playlist" ("PlaylistId", "Name", "UserId") FROM stdin;
+\.
+
+
+--
+-- TOC entry 3035 (class 0 OID 41454)
+-- Dependencies: 201
+-- Data for Name: Reward; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Reward" ("RewardId", "Name", "IssueYear", "SongId") FROM stdin;
+1	Награда 1	\N	1
+2	Награда 2	\N	1
+3	Награда 3	\N	1
+4	Награда 4	\N	2
+5	Награда 5	\N	2
+6	Награда 6	\N	1
+7	Награда 7	\N	3
+8	Награда 8	\N	4
+9	Награда 9	\N	1
+10	Награда 1	\N	2
+11	Награда 2	\N	3
+\.
+
+
+--
+-- TOC entry 3033 (class 0 OID 41441)
+-- Dependencies: 199
+-- Data for Name: Song; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Song" ("SongId", "Name", "AlbumId", "Genre", "ReleaseYear", "Rating") FROM stdin;
+6	Песня 12	\N	жанр 1	1970-01-01	1
+7	Песня 13	\N	жанр 3	1980-01-01	8
+8	Песня 14	\N	жанр 4	1990-01-01	2
+9	Песня 1	\N	жанр 1	1960-01-01	7
+10	Песня 2	\N	жанр 1	1960-01-01	7
+11	Песня 3	\N	жанр 3	1960-01-01	8
+12	Песня 4	\N	жанр 4	1960-01-01	2
+13	Песня 11	\N	жанр 1	1960-01-01	1
+14	Песня 12	\N	жанр 1	1960-01-01	1
+15	Песня 13	\N	жанр 3	1960-01-01	8
+16	Песня 14	\N	жанр 4	1960-01-01	2
+1	Песня 1	1	жанр 1	1960-01-01	7
+2	Песня 2	1	жанр 1	1970-01-01	7
+3	Песня 3	1	жанр 3	1980-01-01	8
+4	Песня 4	2	жанр 4	1990-01-01	2
+5	Песня 11	2	жанр 1	1960-01-01	1
+\.
+
+
+--
+-- TOC entry 3042 (class 0 OID 41493)
+-- Dependencies: 208
+-- Data for Name: SongExecutor; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."SongExecutor" ("SongId", "ExecutorId") FROM stdin;
+1	1
+3	1
+2	2
+4	3
+\.
+
+
+--
+-- TOC entry 3043 (class 0 OID 41511)
+-- Dependencies: 209
+-- Data for Name: SongPlaylist; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."SongPlaylist" ("PlaylistId", "SongId") FROM stdin;
+\.
+
+
+--
+-- TOC entry 3039 (class 0 OID 41476)
+-- Dependencies: 205
+-- Data for Name: User; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."User" ("UserId", "Login", "Username") FROM stdin;
+\.
+
+
+--
+-- TOC entry 3051 (class 0 OID 41557)
+-- Dependencies: 217
+-- Data for Name: auth_group; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_group (id, name) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3053 (class 0 OID 41567)
+-- Dependencies: 219
+-- Data for Name: auth_group_permissions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3049 (class 0 OID 41549)
+-- Dependencies: 215
+-- Data for Name: auth_permission; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
+1	Can add log entry	1	add_logentry
+2	Can change log entry	1	change_logentry
+3	Can delete log entry	1	delete_logentry
+4	Can view log entry	1	view_logentry
+5	Can add permission	2	add_permission
+6	Can change permission	2	change_permission
+7	Can delete permission	2	delete_permission
+8	Can view permission	2	view_permission
+9	Can add group	3	add_group
+10	Can change group	3	change_group
+11	Can delete group	3	delete_group
+12	Can view group	3	view_group
+13	Can add user	4	add_user
+14	Can change user	4	change_user
+15	Can delete user	4	delete_user
+16	Can view user	4	view_user
+17	Can add content type	5	add_contenttype
+18	Can change content type	5	change_contenttype
+19	Can delete content type	5	delete_contenttype
+20	Can view content type	5	view_contenttype
+21	Can add session	6	add_session
+22	Can change session	6	change_session
+23	Can delete session	6	delete_session
+24	Can view session	6	view_session
+25	Can add album	7	add_album
+26	Can change album	7	change_album
+27	Can delete album	7	delete_album
+28	Can view album	7	view_album
+29	Can add executor	8	add_executor
+30	Can change executor	8	change_executor
+31	Can delete executor	8	delete_executor
+32	Can view executor	8	view_executor
+33	Can add reward	9	add_reward
+34	Can change reward	9	change_reward
+35	Can delete reward	9	delete_reward
+36	Can view reward	9	view_reward
+37	Can add user	10	add_user
+38	Can change user	10	change_user
+39	Can delete user	10	delete_user
+40	Can view user	10	view_user
+41	Can add songexecutor	11	add_songexecutor
+42	Can change songexecutor	11	change_songexecutor
+43	Can delete songexecutor	11	delete_songexecutor
+44	Can view songexecutor	11	view_songexecutor
+45	Can add song	12	add_song
+46	Can change song	12	change_song
+47	Can delete song	12	delete_song
+48	Can view song	12	view_song
+49	Can add playlist	13	add_playlist
+50	Can change playlist	13	change_playlist
+51	Can delete playlist	13	delete_playlist
+52	Can view playlist	13	view_playlist
+53	Can add songplaylist	14	add_songplaylist
+54	Can change songplaylist	14	change_songplaylist
+55	Can delete songplaylist	14	delete_songplaylist
+56	Can view songplaylist	14	view_songplaylist
+\.
+
+
+--
+-- TOC entry 3055 (class 0 OID 41575)
+-- Dependencies: 221
+-- Data for Name: auth_user; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
+1	pbkdf2_sha256$260000$1aXIP8xEP5xzWXEiD2n8uq$d8Ys34vIE/X7gXgm1WGdf/EscJvyzB5AWYNHvDUPCuI=	2021-09-16 17:42:42.521505+03	t	admin			admin@admin.ru	t	t	2021-09-16 02:52:16.606368+03
+\.
+
+
+--
+-- TOC entry 3057 (class 0 OID 41585)
+-- Dependencies: 223
+-- Data for Name: auth_user_groups; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_user_groups (id, user_id, group_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3059 (class 0 OID 41593)
+-- Dependencies: 225
+-- Data for Name: auth_user_user_permissions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3061 (class 0 OID 41653)
+-- Dependencies: 227
+-- Data for Name: django_admin_log; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_admin_log (id, action_time, object_id, object_repr, action_flag, change_message, content_type_id, user_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3047 (class 0 OID 41539)
+-- Dependencies: 213
+-- Data for Name: django_content_type; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_content_type (id, app_label, model) FROM stdin;
+1	admin	logentry
+2	auth	permission
+3	auth	group
+4	auth	user
+5	contenttypes	contenttype
+6	sessions	session
+7	playlist_app	album
+8	playlist_app	executor
+9	playlist_app	reward
+10	playlist_app	user
+11	playlist_app	songexecutor
+12	playlist_app	song
+13	playlist_app	playlist
+14	playlist_app	songplaylist
+\.
+
+
+--
+-- TOC entry 3045 (class 0 OID 41528)
+-- Dependencies: 211
+-- Data for Name: django_migrations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_migrations (id, app, name, applied) FROM stdin;
+1	contenttypes	0001_initial	2021-09-16 02:51:21.688882+03
+2	auth	0001_initial	2021-09-16 02:51:22.945645+03
+3	admin	0001_initial	2021-09-16 02:51:23.175829+03
+4	admin	0002_logentry_remove_auto_add	2021-09-16 02:51:23.223819+03
+5	admin	0003_logentry_add_action_flag_choices	2021-09-16 02:51:23.249819+03
+6	contenttypes	0002_remove_content_type_name	2021-09-16 02:51:23.349848+03
+7	auth	0002_alter_permission_name_max_length	2021-09-16 02:51:23.402789+03
+8	auth	0003_alter_user_email_max_length	2021-09-16 02:51:23.433772+03
+9	auth	0004_alter_user_username_opts	2021-09-16 02:51:23.463802+03
+10	auth	0005_alter_user_last_login_null	2021-09-16 02:51:23.496783+03
+11	auth	0006_require_contenttypes_0002	2021-09-16 02:51:23.504771+03
+12	auth	0007_alter_validators_add_error_messages	2021-09-16 02:51:23.542776+03
+13	auth	0008_alter_user_username_max_length	2021-09-16 02:51:23.706604+03
+14	auth	0009_alter_user_last_name_max_length	2021-09-16 02:51:23.751758+03
+15	auth	0010_alter_group_name_max_length	2021-09-16 02:51:23.785361+03
+16	auth	0011_update_proxy_permissions	2021-09-16 02:51:23.811377+03
+17	auth	0012_alter_user_first_name_max_length	2021-09-16 02:51:23.841374+03
+18	sessions	0001_initial	2021-09-16 02:51:24.039107+03
+19	playlist_app	0001_initial	2021-09-16 03:05:58.108267+03
+\.
+
+
+--
+-- TOC entry 3062 (class 0 OID 41684)
+-- Dependencies: 228
+-- Data for Name: django_session; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
+aa65rx7wiqfr3ze5hfpxokiros2neuaz	.eJxVjDkOwjAURO_iGlneF0r6nMHyt79xANlSnFSIu5NIKaCZYt6beZMQt7WGbeAS5kyuhJPLbwcxPbEdID9iu3eaeluXGeih0JMOOvWMr9vp_h3UOOq-loAmKo7eiuI8S9ZbkNpEXxhmVIAqSW4EQtlDWe4MZ15YdNYo0BrI5wvjhTeK:1mQeqK:YT5t4Nf5N6u80LUaa3o8cHA6J7amzCIj1AO9boo6fP8	2021-09-30 03:01:32.190955+03
+0erg78hf60tjoylts3gvd89lzjjb02uk	.eJxVjDkOwjAURO_iGlneF0r6nMHyt79xANlSnFSIu5NIKaCZYt6beZMQt7WGbeAS5kyuhJPLbwcxPbEdID9iu3eaeluXGeih0JMOOvWMr9vp_h3UOOq-loAmKo7eiuI8S9ZbkNpEXxhmVIAqSW4EQtlDWe4MZ15YdNYo0BrI5wvjhTeK:1mQsb4:0bWcUnARqAG8Xat2LDpKw2MwRmtjAvjUJgh0o68BTX0	2021-09-30 17:42:42.527499+03
+\.
+
+
+--
+-- TOC entry 3080 (class 0 OID 0)
+-- Dependencies: 196
+-- Name: Album_AlbumId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Album_AlbumId_seq"', 2, true);
+
+
+--
+-- TOC entry 3081 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: Executor_ExecutorId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Executor_ExecutorId_seq"', 5, true);
+
+
+--
+-- TOC entry 3082 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: Playlist_PlaylistId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Playlist_PlaylistId_seq"', 1, false);
+
+
+--
+-- TOC entry 3083 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: Reward_RewardId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Reward_RewardId_seq"', 11, true);
+
+
+--
+-- TOC entry 3084 (class 0 OID 0)
+-- Dependencies: 198
+-- Name: Song_SongId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Song_SongId_seq"', 16, true);
+
+
+--
+-- TOC entry 3085 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: User_UserId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."User_UserId_seq"', 1, false);
+
+
+--
+-- TOC entry 3086 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: auth_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_group_id_seq', 1, false);
+
+
+--
+-- TOC entry 3087 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 1, false);
+
+
+--
+-- TOC entry 3088 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 56, true);
+
+
+--
+-- TOC entry 3089 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_user_groups_id_seq', 1, false);
+
+
+--
+-- TOC entry 3090 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: auth_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_user_id_seq', 1, true);
+
+
+--
+-- TOC entry 3091 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 1, false);
+
+
+--
+-- TOC entry 3092 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 1, false);
+
+
+--
+-- TOC entry 3093 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 14, true);
+
+
+--
+-- TOC entry 3094 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 19, true);
+
+
+--
+-- TOC entry 2831 (class 2606 OID 41438)
+-- Name: Album Album_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Album"
+    ADD CONSTRAINT "Album_pkey" PRIMARY KEY ("AlbumId");
+
+
+--
+-- TOC entry 2837 (class 2606 OID 41473)
+-- Name: Executor Executor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Executor"
+    ADD CONSTRAINT "Executor_pkey" PRIMARY KEY ("ExecutorId");
+
+
+--
+-- TOC entry 2841 (class 2606 OID 41487)
+-- Name: Playlist Playlist_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Playlist"
+    ADD CONSTRAINT "Playlist_pkey" PRIMARY KEY ("PlaylistId");
+
+
+--
+-- TOC entry 2835 (class 2606 OID 41458)
+-- Name: Reward Reward_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Reward"
+    ADD CONSTRAINT "Reward_pkey" PRIMARY KEY ("RewardId");
+
+
+--
+-- TOC entry 2843 (class 2606 OID 41497)
+-- Name: SongExecutor SongExecutor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."SongExecutor"
+    ADD CONSTRAINT "SongExecutor_pkey" PRIMARY KEY ("SongId", "ExecutorId");
+
+
+--
+-- TOC entry 2845 (class 2606 OID 41515)
+-- Name: SongPlaylist SongPlaylist_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."SongPlaylist"
+    ADD CONSTRAINT "SongPlaylist_pkey" PRIMARY KEY ("PlaylistId", "SongId");
+
+
+--
+-- TOC entry 2833 (class 2606 OID 41446)
+-- Name: Song Song_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Song"
+    ADD CONSTRAINT "Song_pkey" PRIMARY KEY ("SongId");
+
+
+--
+-- TOC entry 2839 (class 2606 OID 41480)
+-- Name: User User_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."User"
+    ADD CONSTRAINT "User_pkey" PRIMARY KEY ("UserId");
+
+
+--
+-- TOC entry 2859 (class 2606 OID 41682)
+-- Name: auth_group auth_group_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_name_key UNIQUE (name);
+
+
+--
+-- TOC entry 2864 (class 2606 OID 41609)
+-- Name: auth_group_permissions auth_group_permissions_group_id_permission_id_0cd325b0_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_permission_id_0cd325b0_uniq UNIQUE (group_id, permission_id);
+
+
+--
+-- TOC entry 2867 (class 2606 OID 41572)
+-- Name: auth_group_permissions auth_group_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2861 (class 2606 OID 41562)
+-- Name: auth_group auth_group_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2854 (class 2606 OID 41600)
+-- Name: auth_permission auth_permission_content_type_id_codename_01ab375a_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_codename_01ab375a_uniq UNIQUE (content_type_id, codename);
+
+
+--
+-- TOC entry 2856 (class 2606 OID 41554)
+-- Name: auth_permission auth_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2875 (class 2606 OID 41590)
+-- Name: auth_user_groups auth_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2878 (class 2606 OID 41624)
+-- Name: auth_user_groups auth_user_groups_user_id_group_id_94350c0c_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_user_id_group_id_94350c0c_uniq UNIQUE (user_id, group_id);
+
+
+--
+-- TOC entry 2869 (class 2606 OID 41580)
+-- Name: auth_user auth_user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user
+    ADD CONSTRAINT auth_user_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2881 (class 2606 OID 41598)
+-- Name: auth_user_user_permissions auth_user_user_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2884 (class 2606 OID 41638)
+-- Name: auth_user_user_permissions auth_user_user_permissions_user_id_permission_id_14a6b632_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permissions_user_id_permission_id_14a6b632_uniq UNIQUE (user_id, permission_id);
+
+
+--
+-- TOC entry 2872 (class 2606 OID 41676)
+-- Name: auth_user auth_user_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user
+    ADD CONSTRAINT auth_user_username_key UNIQUE (username);
+
+
+--
+-- TOC entry 2887 (class 2606 OID 41662)
+-- Name: django_admin_log django_admin_log_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2849 (class 2606 OID 41546)
+-- Name: django_content_type django_content_type_app_label_model_76bd3d3b_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_app_label_model_76bd3d3b_uniq UNIQUE (app_label, model);
+
+
+--
+-- TOC entry 2851 (class 2606 OID 41544)
+-- Name: django_content_type django_content_type_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2847 (class 2606 OID 41536)
+-- Name: django_migrations django_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_migrations
+    ADD CONSTRAINT django_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2891 (class 2606 OID 41691)
+-- Name: django_session django_session_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_session
+    ADD CONSTRAINT django_session_pkey PRIMARY KEY (session_key);
+
+
+--
+-- TOC entry 2857 (class 1259 OID 41683)
+-- Name: auth_group_name_a6ea08ec_like; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_group_name_a6ea08ec_like ON public.auth_group USING btree (name varchar_pattern_ops);
+
+
+--
+-- TOC entry 2862 (class 1259 OID 41620)
+-- Name: auth_group_permissions_group_id_b120cbf9; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_group_permissions_group_id_b120cbf9 ON public.auth_group_permissions USING btree (group_id);
+
+
+--
+-- TOC entry 2865 (class 1259 OID 41621)
+-- Name: auth_group_permissions_permission_id_84c5c92e; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_group_permissions_permission_id_84c5c92e ON public.auth_group_permissions USING btree (permission_id);
+
+
+--
+-- TOC entry 2852 (class 1259 OID 41606)
+-- Name: auth_permission_content_type_id_2f476e4b; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_permission_content_type_id_2f476e4b ON public.auth_permission USING btree (content_type_id);
+
+
+--
+-- TOC entry 2873 (class 1259 OID 41636)
+-- Name: auth_user_groups_group_id_97559544; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_user_groups_group_id_97559544 ON public.auth_user_groups USING btree (group_id);
+
+
+--
+-- TOC entry 2876 (class 1259 OID 41635)
+-- Name: auth_user_groups_user_id_6a12ed8b; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_user_groups_user_id_6a12ed8b ON public.auth_user_groups USING btree (user_id);
+
+
+--
+-- TOC entry 2879 (class 1259 OID 41650)
+-- Name: auth_user_user_permissions_permission_id_1fbb5f2c; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_user_user_permissions_permission_id_1fbb5f2c ON public.auth_user_user_permissions USING btree (permission_id);
+
+
+--
+-- TOC entry 2882 (class 1259 OID 41649)
+-- Name: auth_user_user_permissions_user_id_a95ead1b; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_user_user_permissions_user_id_a95ead1b ON public.auth_user_user_permissions USING btree (user_id);
+
+
+--
+-- TOC entry 2870 (class 1259 OID 41677)
+-- Name: auth_user_username_6821ab7c_like; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_user_username_6821ab7c_like ON public.auth_user USING btree (username varchar_pattern_ops);
+
+
+--
+-- TOC entry 2885 (class 1259 OID 41673)
+-- Name: django_admin_log_content_type_id_c4bce8eb; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_admin_log_content_type_id_c4bce8eb ON public.django_admin_log USING btree (content_type_id);
+
+
+--
+-- TOC entry 2888 (class 1259 OID 41674)
+-- Name: django_admin_log_user_id_c564eba6; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_admin_log_user_id_c564eba6 ON public.django_admin_log USING btree (user_id);
+
+
+--
+-- TOC entry 2889 (class 1259 OID 41693)
+-- Name: django_session_expire_date_a5c62663; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_session_expire_date_a5c62663 ON public.django_session USING btree (expire_date);
+
+
+--
+-- TOC entry 2892 (class 1259 OID 41692)
+-- Name: django_session_session_key_c0390e0f_like; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_session_session_key_c0390e0f_like ON public.django_session USING btree (session_key varchar_pattern_ops);
+
+
+--
+-- TOC entry 2895 (class 2606 OID 41488)
+-- Name: Playlist Playlist_UserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Playlist"
+    ADD CONSTRAINT "Playlist_UserId_fkey" FOREIGN KEY ("UserId") REFERENCES public."User"("UserId");
+
+
+--
+-- TOC entry 2894 (class 2606 OID 41459)
+-- Name: Reward Reward_SongId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Reward"
+    ADD CONSTRAINT "Reward_SongId_fkey" FOREIGN KEY ("SongId") REFERENCES public."Song"("SongId");
+
+
+--
+-- TOC entry 2897 (class 2606 OID 41503)
+-- Name: SongExecutor SongExecutor_ExecutorId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."SongExecutor"
+    ADD CONSTRAINT "SongExecutor_ExecutorId_fkey" FOREIGN KEY ("ExecutorId") REFERENCES public."Executor"("ExecutorId");
+
+
+--
+-- TOC entry 2896 (class 2606 OID 41498)
+-- Name: SongExecutor SongExecutor_SongId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."SongExecutor"
+    ADD CONSTRAINT "SongExecutor_SongId_fkey" FOREIGN KEY ("SongId") REFERENCES public."Song"("SongId");
+
+
+--
+-- TOC entry 2898 (class 2606 OID 41516)
+-- Name: SongPlaylist SongPlaylist_PlaylistId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."SongPlaylist"
+    ADD CONSTRAINT "SongPlaylist_PlaylistId_fkey" FOREIGN KEY ("PlaylistId") REFERENCES public."Playlist"("PlaylistId");
+
+
+--
+-- TOC entry 2899 (class 2606 OID 41521)
+-- Name: SongPlaylist SongPlaylist_SongId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."SongPlaylist"
+    ADD CONSTRAINT "SongPlaylist_SongId_fkey" FOREIGN KEY ("SongId") REFERENCES public."Song"("SongId");
+
+
+--
+-- TOC entry 2893 (class 2606 OID 41447)
+-- Name: Song Song_AlbumId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Song"
+    ADD CONSTRAINT "Song_AlbumId_fkey" FOREIGN KEY ("AlbumId") REFERENCES public."Album"("AlbumId");
+
+
+--
+-- TOC entry 2902 (class 2606 OID 41615)
+-- Name: auth_group_permissions auth_group_permissio_permission_id_84c5c92e_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissio_permission_id_84c5c92e_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 2901 (class 2606 OID 41610)
+-- Name: auth_group_permissions auth_group_permissions_group_id_b120cbf9_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_b120cbf9_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 2900 (class 2606 OID 41601)
+-- Name: auth_permission auth_permission_content_type_id_2f476e4b_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_2f476e4b_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 2904 (class 2606 OID 41630)
+-- Name: auth_user_groups auth_user_groups_group_id_97559544_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_group_id_97559544_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 2903 (class 2606 OID 41625)
+-- Name: auth_user_groups auth_user_groups_user_id_6a12ed8b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_user_id_6a12ed8b_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 2906 (class 2606 OID 41644)
+-- Name: auth_user_user_permissions auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 2905 (class 2606 OID 41639)
+-- Name: auth_user_user_permissions auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 2907 (class 2606 OID 41663)
+-- Name: django_admin_log django_admin_log_content_type_id_c4bce8eb_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_content_type_id_c4bce8eb_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 2908 (class 2606 OID 41668)
+-- Name: django_admin_log django_admin_log_user_id_c564eba6_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_user_id_c564eba6_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+-- Completed on 2021-09-19 13:37:16
+
+--
+-- PostgreSQL database dump complete
+--
+
